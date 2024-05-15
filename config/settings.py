@@ -15,12 +15,11 @@ import os
 import random
 import string
 from dotenv import load_dotenv
-from corsheaders.defaults import default_headers
 from django.contrib.messages import constants
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
+
 STATIC_DIR=os.path.join(BASE_DIR,'static')
 
 load_dotenv(os.path.join(BASE_DIR, ".env"))  # take environment variables from .env.
@@ -42,19 +41,14 @@ if not DEBUG:
 	SESSION_COOKIE_SECURE = True
 	CSRF_COOKIE_SECURE = True
 
-ALLOWED_HOSTS = [ 
-    'localhost', 
-    '127.0.0.1',  
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
 ]
 
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    'X-Register',
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3030',
 ]
-
-# CORS Config
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = False
-
 
 # Application definition
 
@@ -67,6 +61,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # other apps
     'corsheaders',
+    'crispy_forms',
+    'rolepermissions',
     # my_apps
     'base',
 ]
@@ -80,7 +76,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # Corsheaders middleware
-    'corsheaders.middleware.CorsMiddleware',  
+    'corsheaders.middleware.CorsMiddleware',
     # Request Logs middleware
     'requestlogs.middleware.RequestLogsMiddleware'  ,
     # Timeout middleware
@@ -92,7 +88,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -100,7 +96,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'config.context_processors.environment'
+                'base.context_processors.variaveis_base'
+            ],
+            "libraries": {},
+            "builtins": [
+                'django.templatetags.static',
+                'django.templatetags.i18n',
             ],
         },
     },
@@ -169,9 +170,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # timeout tempo de inatividate no sistema
-SESSION_EXPIRE_SECONDS = 1800 
+SESSION_EXPIRE_SECONDS = 1800
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
-#SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 60  
+#SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 60
 SESSION_TIMEOUT_REDIRECT = 'http://localhost:8000/'
 
 LOGIN_URL = 'login'
@@ -186,7 +187,7 @@ LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
-USE_L10N = True 
+USE_L10N = True
 USE_TZ = True
 
 
@@ -208,9 +209,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configurações de Email
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') 
-EMAIL_PORT = os.getenv('EMAIL_PORT') 
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') 
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
@@ -222,3 +223,4 @@ MESSAGE_TAGS = {
 	constants.SUCCESS: 'alert-success',
 	constants.INFO: 'alert-info',
 }
+
