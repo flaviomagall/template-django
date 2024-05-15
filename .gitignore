@@ -1,0 +1,40 @@
+# Virtual environment
+venv/
+env/
+env_bak/
+.venv/
+
+# IDE / Text editor specific files
+.vscode/
+.idea/
+
+# Dados e arquivos gerados
+*.sqlite
+*.log
+*.csv
+*.xlsx
+
+
+# Dados sensíveis
+*.env
+
+
+# Cached files
+*.pyc
+__pycache__/
+__pycache__ 
+
+
+# Arquivos Temporários
+/tmp
+
+# Arquivos Estáticos
+/static_media
+static_media
+/static_files
+static_files
+
+
+
+
+
