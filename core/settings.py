@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'rolepermissions',
     # my_apps
+    'apps.users'
 ]
 
 MIDDLEWARE = [
@@ -72,6 +73,11 @@ MIDDLEWARE = [
     # Timeout middleware
     'django_session_timeout.middleware.SessionTimeoutMiddleware',
 ]
+
+
+ROLEPERMISSIONS_MODULE = 'core.roles'
+ROLEPERMISSIONS_REGISTER_ADMIN = True
+
 
 ROOT_URLCONF = 'core.urls'
 

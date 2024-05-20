@@ -8,12 +8,12 @@ Esse é o padrão de configuração de projeto que utilizo.
 <details><summary><b>Ambiente Virtual Linux/Windows</b></summary>
 
 - **Ambiente Virtual Linux/Windows**
-    
-    
+
+
     Lembrando… Precisa ter Python instalado no seu ambiente.
-    
+
     **Criar o ambiente virtual Linux/Windows**
-    
+
     ```python
     ## Windows
     python -m venv .venv
@@ -24,48 +24,48 @@ Esse é o padrão de configuração de projeto que utilizo.
     virtualenv .venv
     source .venv/bin/activate # Ativar ambiente
     ```
-    
+
     Instalar os seguintes pacotes.
-    
+
     ```python
     pip install django
     pip install pillow
     ```
-    
+
     Para criar o arquivo *requirements.txt*
-    
+
     ```python
     pip freeze > requirements.txt
     ```
 
-</details> 
+</details>
 
-<details><summary><b>Criando o Projeto</b></summary> 
+<details><summary><b>Criando o Projeto</b></summary>
 
 - **Criando o Projeto**
-    
+
     ## **Criando o projeto**
-    
+
     “core” é nome do seu projeto e quando colocamos um “.” depois do nome do projeto significa que é para criar os arquivos na raiz da pasta. Assim não cria subpasta do projeto.
-    
+
     ```python
     django-admin startproject core .
     ```
-    
+
     **Testar a aplicação**
-    
+
     ```python
     python manage.py runserver
-    ``` 
+    ```
 
 </details>
 
 <details><summary><b>Arquivos Static</b></summary>
 
 - **Arquivos Static**
-    
+
     ## **Vamos configurar nossos arquivos** *static*
-    
+
     ```python
     import os 
     
@@ -96,9 +96,9 @@ Esse é o padrão de configuração de projeto que utilizo.
     USE_L10N = True
     USE_TZ = True
     ```
-    
+
     *myapp*/*urls.py*
-    
+
     ```python
     from django.contrib import admin
     from django.conf import settings
@@ -118,12 +118,12 @@ Esse é o padrão de configuração de projeto que utilizo.
 <details><summary><b>Variáveis de Ambiente</b></summary>
 
 - **Variáveis de Ambiente**
-    
-    
-    Para configurar variáveis de ambiente vamos utilizar biblioteca ***python-dotenv.** Existem outras concorrentes, mas eu gosto de usar o python-dotenv.* 
-    
+
+
+    Para configurar variáveis de ambiente vamos utilizar biblioteca ***python-dotenv.** Existem outras concorrentes, mas eu gosto de usar o python-dotenv.*
+
     **Alternativas:**
-    
+
     - [Honcho](https://github.com/nickstenning/honcho)
     - [django-dotenv](https://github.com/jpadilla/django-dotenv)
     - [django-environ](https://github.com/joke2k/django-environ)
@@ -133,23 +133,23 @@ Esse é o padrão de configuração de projeto que utilizo.
     - [environs](https://github.com/sloria/environs)
     - [dynaconf](https://github.com/rochacbruno/dynaconf)
     - [parse_it](https://github.com/naorlivne/parse_it)
-    
+
     Link: [https://pypi.org/project/python-dotenv/](https://pypi.org/project/python-dotenv/)
-    
+
     “*Python-dotenv lê pares chave-valor de um `.env`arquivo e pode defini-los como variáveis de ambiente. Ajuda no desenvolvimento de aplicações seguindo os princípios dos [12 fatores](http://12factor.net/)”*
-    
+
     Da uma olhada nos 12 fatores é interessante.
-    
+
     Vamos lá. Primeiramente vamos instalar essa biblioteca na aplicação.
-    
+
     **`pip install python-dotenv`**
-    
-    Feito isso vamos criar um arquivo chamado **“.env”**. 
-    
+
+    Feito isso vamos criar um arquivo chamado **“.env”**.
+
     Nesse arquivo vamos colocar as variáveis importantes como ***senha do banco de dados, secret_key do django, api_key, chave cloud*** tudo que tem credenciais.
-    
+
     Exemplo:
-    
+
     ```python
     ## Não precisa colocar "" aspas
     SECRET_KEY=django-insecure-q(ge$586x7o9n)3w+6d_^t(m!ib&9%_m8&6@=m=sy@^7qf)#*_
@@ -171,13 +171,13 @@ Esse é o padrão de configuração de projeto que utilizo.
     DEFAULT_FROM_EMAIL = 'email@hotmail.com'
     SERVER_EMAIL = DEFAULT_FROM_EMAIL
     ```
-    
+
     Sempre envio um arquivo exemplo **(sem as informações reais)** como esse exemplo “**_env**” no *commit*. Assim quando eu abaixo o repositório eu preencho somente as informações e renomeio o arquivo para “.**env**”. Lembrando o arquivo “.**env**” não vai nos *commits*. Essa informação deve estar no .*gitignore*. Caso for um servidor real ai você cria esse arquivo no servidor.  
-    
+
     Feito isso pessoal. Vamos configurar no **core/settings.py**
-    
+
     É assim que chamamos as variáveis.
-    
+
     ```python
     # importar a biblioteca
     from dotenv import load_dotenv
@@ -218,21 +218,21 @@ Esse é o padrão de configuração de projeto que utilizo.
 <details><summary><b>CORS HEADERS</b></summary>
 
 - **CORS HEADERS**
-    
+
     Para configurar os Cors Headers precisamos instalar uma biblioteca.
-    
+
     [https://pypi.org/project/django-cors-headers/](https://pypi.org/project/django-cors-headers/)
-    
-    *“Adicionar cabeçalhos CORS permite que seus recursos sejam acessados em outros domínios. É importante que você entenda as implicações antes de adicionar os cabeçalhos, pois você pode estar abrindo involuntariamente os dados privados do seu site para outras pessoas.”* 
-    
+
+    *“Adicionar cabeçalhos CORS permite que seus recursos sejam acessados em outros domínios. É importante que você entenda as implicações antes de adicionar os cabeçalhos, pois você pode estar abrindo involuntariamente os dados privados do seu site para outras pessoas.”*
+
     Instalar a Biblioteca na nossa aplicação
-    
+
     **`pip install django-cors-headers`**
-    
+
     ```python
     from corsheaders.defaults import default_headers
     ```
-    
+
     ```python
     # Adicionar no settings.py
     INSTALLED_APPS = [
@@ -241,7 +241,7 @@ Esse é o padrão de configuração de projeto que utilizo.
         ...,
     ]
     ```
-    
+
     ```
     MIDDLEWARE = [
         ...,
@@ -250,7 +250,7 @@ Esse é o padrão de configuração de projeto que utilizo.
         ...,
     ]
     ```
-    
+
     ```python
     ALLOWED_HOSTS = [ 
     		'localhost', 
@@ -265,10 +265,10 @@ Esse é o padrão de configuração de projeto que utilizo.
     CORS_ORIGIN_ALLOW_ALL = True
     CORS_ALLOW_CREDENTIALS = False
     ```
-    
+
     SSL and Cookies Vamos deixar configurado tambem. No final do video vamos fazer deploy.
     doc: [https://docs.djangoproject.com/en/4.1/ref/settings/](https://docs.djangoproject.com/en/4.1/ref/settings/)
-    
+
     ```python
     if not DEBUG:
     	SECURE_SSL_REDIRECT = True
@@ -279,37 +279,37 @@ Esse é o padrão de configuração de projeto que utilizo.
 
 </details>
 
-<details><summary><b>LOGS</b></summary>    
+<details><summary><b>LOGS</b></summary>
 
 - **LOGS**
-    
-    
+
+
     Vamos configurar os Logs.
-    
+
     Precisamos Instalar essa biblioteca.
-    
+
     Documentação: [https://pypi.org/project/django-requestlogs/](https://pypi.org/project/django-requestlogs/)
-    
+
     **`pip install django-requestlogs`**
-    
+
     Adicionar no ***core/settings.py***
-    
+
     ```
     MIDDLEWARE = [
         ...
         'requestlogs.middleware.RequestLogsMiddleware',
     ]
     ```
-    
+
     ```
     REST_FRAMEWORK={
         ...
         'EXCEPTION_HANDLER': 'requestlogs.views.exception_handler',
     }
     ```
-    
+
     Documentação: [https://docs.djangoproject.com/en/4.1/topics/logging/#topic-logging-parts-loggers](https://docs.djangoproject.com/en/4.1/topics/logging/#topic-logging-parts-loggers)
-    
+
     ```python
     # Logs
     LOGGING = {
@@ -342,15 +342,15 @@ Esse é o padrão de configuração de projeto que utilizo.
 <details><summary><b>Timeout</b></summary>
 
 - **Timeout**
-    
+
     Vamos utilizar a biblioteca D**jango Session Timeout:**
-    
+
     doc: [https://pypi.org/project/django-session-timeout/](https://pypi.org/project/django-session-timeout/)
-    
+
     Instalar Biblioteca.
-    
+
     **`pip install django-session-timeout`**
-    
+
     ```python
     MIDDLEWARE_CLASSES = [
         # ...
@@ -359,7 +359,7 @@ Esse é o padrão de configuração de projeto que utilizo.
         # ...
     ]
     ```
-    
+
     ```python
     # timeout tempo de inatividate no sistema
     SESSION_EXPIRE_SECONDS = 1800 
@@ -367,7 +367,7 @@ Esse é o padrão de configuração de projeto que utilizo.
     #SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 60  
     SESSION_TIMEOUT_REDIRECT = 'http://localhost:8000/'
     ```
-    
+
     ```python
     LOGIN_URL = 'login'
     LOGIN_REDIRECT_URL = '/'
@@ -378,21 +378,21 @@ Esse é o padrão de configuração de projeto que utilizo.
 <details><summary><b>Arquivo Context Processors</b></summary>
 
 - **Arquivo Context Processors**
-    
-    
+
+
     Essa configuração permite criar um contexto Global no seu projeto. Assim você pode chamar esse contexto em qualquer aplicativo do seu projeto.
-    
+
     Primeiro criar um arquivo ***context_processors.py*** na pasta do seu projeto.
-    
+
     ```python
     # from myapp import models
     
     def context_social(request):
         return {'social': 'Exibir este contexto em qualquer lugar!'}
     ```
-    
+
     Ai precisamos registar as funções aqui.
-    
+
     ```python
     TEMPLATES = [
         {
@@ -412,39 +412,39 @@ Esse é o padrão de configuração de projeto que utilizo.
         },
     ]
     ```
-    
+
     Feito essa configuração o contexto “social” se torna Global no seu projeto. Assim você pode chamado em qualquer aplicativo do seu projeto.
 </details>
 
-<details><summary><b>Aplicativo Base (templates, statics)</b></summary>    
+<details><summary><b>Aplicativo Base (templates, statics)</b></summary>
 
 - **Aplicativo Base (templates, statics)**
-    
-    
+
+
     **Vamos criar nosso aplicativo base no Django.**
-    
+
     Aplicação *base* vamos deixar os arquivos base que é utilizado no projeto inteiro. Como templates e arquivos statics como css, js e até images estáticas.
-    
+
     ```python
     python manage.py startapp base
     ```
-    
+
     Agora precisamos registrar nossa aplicação no *INSTALLED_APPS* localizado em *settings.py*.
-    
-    Apos criar app base pode criar as pastas nessa estrutura. 
-    
+
+    Apos criar app base pode criar as pastas nessa estrutura.
+
     1- pasta ***“templates”*** dentro dela colocar **base.html** (vazia por enquanto)
-    
+
     2 - pasta ***“static”*** dentro dela criar pastas **css, image, js.** Cria os arquivos, style.css e javascript.js.
-    
+
     ## Template Base
-    
-    1 - No arquivo ***base.html*** colocar esse template. 
-    
+
+    1 - No arquivo ***base.html*** colocar esse template.
+
     É aqui que vamos renderizar nosso conteúdo. Para não ter que repetir esse template em todas as paginas que criarmos, então fazemos um base e utilizamos *extends* para usar nos outros templates.
-    
+
     *base/templates/base.html*
-    
+
     ```python
     {% load static %}
     <!DOCTYPE html>
@@ -475,19 +475,19 @@ Esse é o padrão de configuração de projeto que utilizo.
     ```
 </details>
 
-<details><summary><b>Django Message</b></summary>    
+<details><summary><b>Django Message</b></summary>
 
 - **Django Message**
-    
-    
+
+
     **Configura mensagem.**
-    
+
     Documentação: [https://docs.djangoproject.com/en/4.1/ref/contrib/messages/](https://docs.djangoproject.com/en/4.1/ref/contrib/messages/)
-    
+
     Nossa biblioteca tem essas configurações de mensagens ativas. Que funciona perfeitamente, mas precisamos renderizar isso no *frontend*. Como estamos utilizando *bootstrap* precisamos adicionar essa configuração no *settings.py* do seu projeto. Adicionando essa configuração as mensagens de alerta aparecerá com as classes do bootstrap.
-    
+
     ***core/settings.py***
-    
+
     ```python
     # --- Messages --- #
     from django.contrib.messages import constants
@@ -500,9 +500,9 @@ Esse é o padrão de configuração de projeto que utilizo.
     	constants.INFO: 'alert-info',
     }
     ```
-    
+
     ***base/templates/message.html***
-    
+
     ```python
     {% if messages %}
     <div class="messages">
@@ -512,9 +512,9 @@ Esse é o padrão de configuração de projeto que utilizo.
     </div>
     {% endif %}
     ```
-    
+
     Adiciona na base
-    
+
     ```python
     <body> 
     	{% include 'message.html' %} ## adiciona isso.
@@ -525,22 +525,22 @@ Esse é o padrão de configuração de projeto que utilizo.
 
 </details>
 
-<details><summary><b>Criando Aplicativo</b></summary>    
+<details><summary><b>Criando Aplicativo</b></summary>
 
-- **Criando Aplicativo** 
+- **Criando Aplicativo**
 
     **Vamos criar nosso aplicativo no Django.**
-    
+
     Para criar a aplicação no Django rode comando abaixo. “myapp” é nome do seu **Aplicativo**.
-    
+
     ```python
     python manage.py startapp myapp
     ```
-    
+
     Agora precisamos registrar nossa aplicação no *INSTALLED_APPS* localizado em *settings.py*.
-    
+
     *myapp*/*templates*/*index.html*
-    
+
     ```html
     {% extends 'base.html' %}
     {% block title %}Pagina 1{% endblock %}
@@ -550,9 +550,9 @@ Esse é o padrão de configuração de projeto que utilizo.
     	<p>{{social}}</p>
     {% endblock %}
     ```
-    
+
     *myapp*/*views.py*
-    
+
     ```python
     from django.shortcuts import render
     
@@ -560,10 +560,10 @@ Esse é o padrão de configuração de projeto que utilizo.
     def index(request):
         return render(request, 'index.html')
     ```
-    
+
     criar arquivo *myapp*/*urls.py*
-    
-    ```
+
+    ```python
     from django.urls import path 
     from myapp import views
     
@@ -571,9 +571,9 @@ Esse é o padrão de configuração de projeto que utilizo.
         path('', views.index, name='index'), 
     ]
     ```
-    
+
     urls.py do projeto. ***core/urls.py***
-    
+
     ```python
     from django.contrib import admin
     from django.urls import path, include # adicionar include
@@ -587,12 +587,90 @@ Esse é o padrão de configuração de projeto que utilizo.
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) # Adicionar Isto
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # Adicionar Isto
     ```
-    
+
     Rodar o projeto para ver como está.
-    
+
     ```python
     python manage.py makemigrations && python manage.py migrate
     python manage.py runserver
     ```
 
+</details>
+
+<details>
+
+<summary><b>Criando Permissões</b></summary>
+
+- **Criando Permissões**
+
+    **Vamos configurar nossas permissões dos usuários**
+
+    Para implementar o role_permissions no seu projeto Django e permitir a gestão de permissões através do painel de administração, você pode seguir os passos abaixo:
+
+    **Instalando a Biblioteca**
+
+    ```python
+    pip install django-role-permissions
+    ```
+
+    **Configurar o settings.py**
+
+    Adicione rolepermissions ao seu arquivo settings.py na lista de INSTALLED_APPS:
+
+    ```python
+    INSTALLED_APPS = [
+    ...
+    'rolepermissions',
+    ...
+    ]
+    ```
+
+    Configure também o módulo:
+
+    ```python
+    ROLEPERMISSIONS_MODULE = 'core.roles'  # Caminho para o módulo onde as roles são definidas
+    ```
+
+    **Defina as Permissões**
+
+    Crie um arquivo permissions.py dentro do app core e defina suas permissões:
+
+    ```python
+    # core/permissions.py
+
+    CONSULTAR_ITEM = 'consultar_item'
+    CRIAR_PEDIDO = 'criar_pedido'
+    ```
+
+    **Definir as Roles**
+
+    Crie um arquivo roles.py dentro do app core e defina suas roles:
+
+    ```python
+    # core/roles.py
+
+    from rolepermissions.roles import AbstractUserRole
+    from core.permissions import CONSULTAR_ITEM, CRIAR_PEDIDO
+
+    class Usuario(AbstractUserRole):
+        available_permissions = {
+            CONSULTAR_ITEM: True,
+        }
+
+    class Cliente(AbstractUserRole):
+        available_permissions = {
+            CONSULTAR_ITEM: True,
+            CRIAR_PEDIDO: True,
+        }
+    ```
+
+    **Sincronizar as Permissões**
+
+    Você precisa sincronizar as permissões definidas no role_permissions com o banco de dados. Execute o comando a seguir:
+
+    ```bash
+    python manage.py sync_roles
+    ```
+
+    
 </details>
