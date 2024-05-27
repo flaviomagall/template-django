@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'rolepermissions',
     # my_apps
-    'apps.users'
+    'apps.authentication.apps.AuthenticationConfig',
 ]
 
 MIDDLEWARE = [
@@ -75,7 +75,7 @@ MIDDLEWARE = [
 ]
 
 
-ROLEPERMISSIONS_MODULE = 'core.roles'
+ROLEPERMISSIONS_MODULE = 'apps.authentication.roles'
 ROLEPERMISSIONS_REGISTER_ADMIN = True
 
 
