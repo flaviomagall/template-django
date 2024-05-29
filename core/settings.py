@@ -15,7 +15,7 @@ import os
 import random
 import string
 from dotenv import load_dotenv
-from django.contrib.messages import constants
+from django.contrib.messages import constants as message_constants
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,21 +25,14 @@ load_dotenv()
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
-if not SECRET_KEY:
-    SECRET_KEY = "".join(random.choice(string.ascii_lowercase) for i in range(32))
+SECRET_KEY = os.environ.get("SECRET_KEY", ''.join(random.choices(string.ascii_lowercase, k=32)))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG")
+DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "t")
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-]
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost 127.0.0.1").split()
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8080',
-]
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:8080").split()
 
 # Application definition
 
@@ -50,12 +43,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # my_apps
+    'apps.authentication.apps.AuthenticationConfig',
+    'apps.utils.apps.UtilsConfig',
+    'apps.aquisicao_itens.apps.AquisicaoItensConfig',
     # other apps
     'corsheaders',
     'crispy_forms',
     'rolepermissions',
-    # my_apps
-    'apps.authentication.apps.AuthenticationConfig',
 ]
 
 MIDDLEWARE = [
@@ -111,8 +106,8 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('ENGINE'),
-        'NAME': os.path.join(BASE_DIR,os.getenv('NAME_DB')),
+        'ENGINE': os.getenv('DATABASE_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, os.getenv('DATABASE_NAME', 'db.sqlite3')),
     }
 }
 
@@ -123,14 +118,53 @@ REST_FRAMEWORK = {
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'requestlogs': {
+            'format': (
+                'Timestamp: {asctime}\n'
+                'User: {user[username]} (ID: {user[id]})\n'
+                'IP Address: {ip_address}\n'
+                'Method: {request[method]}\n'
+                'Path: {request[full_path]}\n'
+                'Status Code: {response[status_code]}\n'
+                'Execution Time: {execution_time}\n'
+                'Request Data: {request[data]}\n'
+                'Query Params: {request[query_params]}\n'
+                'Headers: {request[request_headers]}\n'
+                'Response Data: {response[data]}\n'
+                '-' * 40
+            ),
+            'style': '{',
+        },
+    },
     'handlers': {
         'requestlogs_to_file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'info.log',
+            'formatter': 'requestlogs',
+        },
+        'errorlogs_to_file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'error.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
         },
     },
     'loggers': {
+        'django.request': {
+            'handlers': ['errorlogs_to_file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
         'requestlogs': {
             'handlers': ['requestlogs_to_file'],
             'level': 'INFO',
@@ -141,7 +175,10 @@ LOGGING = {
 
 REQUESTLOGS = {
     'SECRETS': ['password', 'token'],
-    'METHODS': ('PUT', 'PATCH', 'POST', 'DELETE'),
+    'METHODS': ('PUT', 'PATCH', 'POST', 'DELETE'),  # Métodos que serão logados
+    'SKIP_STATUS_CODES': [302],  # Ignore logs para códigos de status específicos
+    'LOG_REQUEST_BODY': True,  # Log do corpo da solicitação
+    'LOG_RESPONSE_BODY': False,  # Não registrar o corpo da resposta
 }
 
 # Password validation
@@ -162,11 +199,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# timeout tempo de inatividate no sistema
-SESSION_EXPIRE_SECONDS = 1800
+# Timeout tempo de inatividade no sistema
+SESSION_EXPIRE_SECONDS = int(os.getenv('SESSION_EXPIRE_SECONDS', 1800))
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
-#SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 60
-SESSION_TIMEOUT_REDIRECT = 'http://localhost:8080/'
+SESSION_TIMEOUT_REDIRECT = os.getenv('SESSION_TIMEOUT_REDIRECT', 'http://localhost:8080/')
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
@@ -176,7 +212,6 @@ LOGOUT_REDIRECT_URL = '/'
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'pt-br'
-
 TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
@@ -184,15 +219,16 @@ USE_L10N = True
 USE_TZ = True
 
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_DIR = os.path.join(BASE_DIR,'static')
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -200,19 +236,36 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configurações de Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ('true', '1', 't')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = os.getenv('EMAIL_PORT')
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 
 MESSAGE_TAGS = {
-	constants.ERROR: 'alert-danger',
-	constants.WARNING: 'alert-warning',
-	constants.DEBUG: 'alert-info',
-	constants.SUCCESS: 'alert-success',
-	constants.INFO: 'alert-info',
+    message_constants.DEBUG: 'alert-info',
+    message_constants.INFO: 'alert-info',
+    message_constants.SUCCESS: 'alert-success',
+    message_constants.WARNING: 'alert-warning',
+    message_constants.ERROR: 'alert-danger',
 }
+
+
+# Configurações de Segurança (recomendado ativar em produção)
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+
+######################################
+# Configurações adicionais do Django #
+######################################
+
+# Validador de email para registrar usuário
+EMAIL_DOMAIN_REQUIRED = 'fab.mil.br'
