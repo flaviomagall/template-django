@@ -5,6 +5,7 @@ from django.contrib.auth import login
 from django.contrib import messages
 from apps.authentication.forms import RegisterForm
 from django.contrib.auth import get_user_model
+from utils.template_layout import TemplateLayout
 
 
 
@@ -14,9 +15,9 @@ class RegisterView(TemplateView):
     template_name = "register.html"
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context['layout_path'] = TemplateLayout.set_layout(TemplateLayout.LayoutsDisplay.layout_blank)  # Passar o nome do layout como string
         context.update({
-            "layout_path": "layout/layout_blank.html",  # Define o layout aqui
             "form": RegisterForm(),  # Adiciona o formulário ao contexto se for GET request
         })
         return context
@@ -29,6 +30,7 @@ class RegisterView(TemplateView):
     def post(self, request, *args, **kwargs):
         form = RegisterForm(request.POST)
         if form.is_valid():
+            # Lógica de criação do usuário
             user = form.save()
             login(request, user)  # Loga o usuário após o registro
             messages.success(request, "Conta criada com sucesso!")
