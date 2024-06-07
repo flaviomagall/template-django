@@ -1,6 +1,4 @@
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from rolepermissions.roles import AbstractUserRole
 
 
 class Permissoes:
@@ -25,32 +23,48 @@ class Permissoes:
 
 PERMISSOES = Permissoes()
 
-class UsuarioRole(User):
+class Usuario(AbstractUserRole):
     available_permissions = {
         PERMISSOES.buscar_item : True,
         PERMISSOES.consultar_item : True,
     }
 
-class SolicitanteRole(UsuarioRole):
-    available_permissions = UsuarioRole.available_permissions.copy()
+class Solicitante(Usuario):
+    available_permissions = Usuario.available_permissions.copy()
     available_permissions.update({
         PERMISSOES.criar_pedido : True,
         PERMISSOES.atualizar_pedido : True,
         PERMISSOES.excluir_pedido : True,
     })
 
-class DemandaRole(SolicitanteRole):
-    available_permissions = SolicitanteRole.available_permissions.copy()
+class Demanda(Solicitante):
+    available_permissions = Solicitante.available_permissions.copy()
     available_permissions.update({
         PERMISSOES.excluir_item : True,
         PERMISSOES.analisar_pedido : True,
         PERMISSOES.analisar_demanda : True,
     })
 
-class ObtencaoRole(SolicitanteRole):
-    available_permissions = SolicitanteRole.available_permissions.copy()
+class Obtencao(Solicitante):
+    available_permissions = Solicitante.available_permissions.copy()
     available_permissions.update({
         PERMISSOES.excluir_item : True,
         PERMISSOES.analisar_pedido : True,
         PERMISSOES.criar_requisicao : True,
     })
+
+class Administrador(AbstractUserRole):
+    available_permissions = {
+        PERMISSOES.buscar_item : True,
+        PERMISSOES.criar_pedido : True,
+
+        PERMISSOES.consultar_item : True,
+        PERMISSOES.excluir_item : True,
+
+        PERMISSOES.atualizar_pedido : True,
+        PERMISSOES.analisar_pedido : True,
+        PERMISSOES.excluir_pedido : True,
+
+        PERMISSOES.analisar_demanda : True,
+        PERMISSOES.criar_requisicao : True,
+    }

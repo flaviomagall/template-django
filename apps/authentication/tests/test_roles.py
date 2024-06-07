@@ -2,7 +2,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from rolepermissions.roles import assign_role, clear_roles
 from rolepermissions.checkers import has_permission
-from apps.authentication.roles import Permissoes, UsuarioRole, SolicitanteRole, DemandaRole, ObtencaoRole
+from apps.authentication.roles import Permissoes, Usuario, Solicitante, Demanda, Obtencao
 
 PERMISSOES = Permissoes()
 User = get_user_model()
@@ -64,10 +64,10 @@ def usuario():
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("role, permissoes_esperadas", [
-    (UsuarioRole, lista_permissoes['usuario']),
-    (SolicitanteRole, lista_permissoes['solicitante']),
-    (DemandaRole, lista_permissoes['tprc']),
-    (ObtencaoRole, lista_permissoes['tpob']),
+    (Usuario, lista_permissoes['usuario']),
+    (Solicitante, lista_permissoes['solicitante']),
+    (Demanda, lista_permissoes['tprc']),
+    (Obtencao, lista_permissoes['tpob']),
 ])
 def test_permissoes_por_role(usuario, role, permissoes_esperadas):
     assign_role(usuario, role.__name__.lower())
@@ -75,12 +75,12 @@ def test_permissoes_por_role(usuario, role, permissoes_esperadas):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("role, permissoes_iniciais, permissoes_finais", [
-    (SolicitanteRole, lista_permissoes['usuario'], lista_permissoes['solicitante']),
-    (DemandaRole, lista_permissoes['usuario'], lista_permissoes['tprc']),
-    (ObtencaoRole, lista_permissoes['usuario'], lista_permissoes['tpob']),
+    (Solicitante, lista_permissoes['usuario'], lista_permissoes['solicitante']),
+    (Demanda, lista_permissoes['usuario'], lista_permissoes['tprc']),
+    (Obtencao, lista_permissoes['usuario'], lista_permissoes['tpob']),
 ])
 def test_alterar_role(usuario, role, permissoes_iniciais, permissoes_finais):
-    assign_role(usuario, UsuarioRole.__name__.lower())
+    assign_role(usuario, Usuario.__name__.lower())
     verificar_permissoes(usuario, permissoes_iniciais)
 
     # Alterar a role do usuário

@@ -1,4 +1,4 @@
-from .variaveis_projeto import variaveis_base
+from .variaveis_base import variaveis_base
 
 
 __all__ = [

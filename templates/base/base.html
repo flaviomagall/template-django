@@ -1,0 +1,30 @@
+<!-- templates/base/base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %} | {{ VARIAVEIS_BASE.template_name }} - {{ VARIAVEIS_BASE.template_suffix }}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="description" content="{{ VARIAVEIS_BASE.template_description }}" />
+    <meta name="keywords" content="{{ VARIAVEIS_BASE.template_keyword }}" />
+    <!-- Canonical SEO -->
+    <link rel="canonical" href="{{ VARIAVEIS_BASE.product_page }}">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/favicon/favicon.ico' %}" />
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    {% include 'partials/header.html' %}
+    {% block content %}{% endblock %}
+    <!-- Footer -->
+    {% include 'partials/footer.html' %}
+    <!-- JS -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

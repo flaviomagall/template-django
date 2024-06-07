@@ -1,0 +1,9 @@
+<!-- templates/layout/layout_blank.html -->
+{% extends "base/base.html" %}
+{% include "includes/blank_css_js.html" %}
+
+{% block content %}
+<div class="container">
+    {% block main_content %}{% endblock %}
+</div>
+{% endblock %}

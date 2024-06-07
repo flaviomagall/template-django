@@ -1,0 +1,12 @@
+<!-- templates/layout/layout_vertical_menu.html -->
+{% extends "base/base.html" %}
+{% include "includes/vertical_menu_css_js.html" %}
+
+{% block content %}
+<div class="container">
+    {% include 'partials/sidebar.html' %}
+    <main class="main-content">
+        {% block main_content %}{% endblock %}
+    </main>
+</div>
+{% endblock %}

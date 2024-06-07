@@ -2,6 +2,7 @@ import os
 from django.utils.text import slugify
 from django.db import models
 from django.contrib.auth import get_user_model
+from apps.authentication.constants import CARGO_CHOICES
 
 User = get_user_model()
 
@@ -18,17 +19,11 @@ class Perfil(models.Model):
     Modelo de Perfil do Usuário
     """
 
-    CARGO_CHOICES = [
-        ('usuario', 'Usuário'),
-        ('solicitante', 'Solicitante'),
-        ('demanda', 'Demanda'),
-        ('obtencao', 'Obtenção'),
-        ('administrador', 'Administrador'),
-    ]
-
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name='perfil')
     setor = models.CharField(max_length=30, choices=CARGO_CHOICES, verbose_name='Cargo')
     foto = models.ImageField(upload_to=user_directory_path, default='avatars/default.png', blank=True, null=True, verbose_name='Foto do Usuário')
+    criado_em = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
+    atualizado_em = models.DateTimeField(auto_now=True, verbose_name='Atualizado em')
 
     def __str__(self):
         return self.usuario.username
